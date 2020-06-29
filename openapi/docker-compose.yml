@@ -1,0 +1,35 @@
+version: "3"
+services:
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: "swagger-ui"
+    ports:
+      - "8082:8080"
+    volumes:
+      - ./swagger.yaml:/swagger.yaml
+    environment:
+      SWAGGER_JSON: /swagger.yaml
+  swagger-api:
+    image: danielgtaylor/apisprout
+    container_name: "swagger-api"
+    ports:
+      - 8083:8000
+    volumes:
+      - ./swagger.yaml:/swagger.yaml
+    command: swagger.yaml
+    networks:
+      swagger_link:
+        aliases:
+          - local.swagger.apisprout
+  openapi-generator:
+    image: openapitools/openapi-generator:cli-v4.2.3
+    environment:
+      - TARGET_YAML=${TARGET_YAML}
+    container_name: "openapi-generator"
+    volumes:
+      - ./:/openapi
+      - ../front/src/services/api:/api
+    command: generate -g typescript-axios -i /openapi/${TARGET_YAML}.yaml -o /api --api-package=${TARGET_YAML} --model-package=types/${TARGET_YAML} -p withSeparateModelsAndApi=true
+networks:
+  swagger_link:
+    external: true
