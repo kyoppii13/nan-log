@@ -23,8 +23,7 @@ services:
           - local.swagger.apisprout
   openapi-generator:
     image: openapitools/openapi-generator:cli-v4.2.3
-    environment:
-      - TARGET_YAML=${TARGET_YAML}
+    env_file: .env
     container_name: "openapi-generator"
     volumes:
       - ./:/openapi
