@@ -7,7 +7,7 @@ services:
     ports:
       - 8083:8083
     volumes:
-      - ./api:/myapp
+      - ./api:/app
       - bundle:/usr/local/bundle
     command: bundle exec rails s -p 8083 -b '0.0.0.0'
     depends_on:
@@ -20,16 +20,7 @@ services:
       - 3306:3306
     volumes:
       - mysql_data:/var/lib/mysql
-  app:
-    build: ./front
-    tty: true
-    stdin_open: true
-    ports:
-      - 8080:8080
-    volumes:
-      - ./front:/usr/src/app
-      - /usr/src/app/node_modules
-    command: yarn serve
+
 volumes:
   bundle:
   mysql_data:
